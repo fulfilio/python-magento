@@ -252,17 +252,23 @@ class Product(API):
         """
         return self.call('catalog_product.list', [filters, store_view])
 
-    def info(self, product, store_view=None, attributes=None):
+    def info(self, product, store_view=None, attributes=None,
+             identifierType=None):
         """
         Retrieve product data
 
         :param product: ID or SKU of product
         :param store_view: ID or Code of store view
         :param attributes: List of fields required
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: `dict` of values
         """
         return self.call(
-            'catalog_product.info', [product, store_view, attributes]
+            'catalog_product.info', [
+                product, store_view, attributes, identifierType
+            ]
         )
 
     def create(self, product_type, attribute_set_id, sku, data):
@@ -281,22 +287,26 @@ class Product(API):
             )
         )
 
-    def update(self, product, data, store_view=None):
+    def update(self, product, data, store_view=None, identifierType=None):
         """
         Update product Information
 
         :param product: ID or SKU of product
         :param data: Dictionary of attributes to update
         :param store_view: ID or Code of store view
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
 
         :return: Boolean
         """
         return bool(self.call(
-            'catalog_product.update', [product, data, store_view])
-        )
+            'catalog_product.update',
+            [product, data, store_view, identifierType]
+        ))
 
     def setSpecialPrice(self, product, special_price=None,
-                        from_date=None, to_date=None, store_view=None):
+                        from_date=None, to_date=None, store_view=None,
+                        identifierType=None):
         """
         Update product's special price
 
@@ -305,36 +315,48 @@ class Product(API):
         :param from_date: From date
         :param to_date: To Date
         :param store_view: ID or Code of Store View
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
 
         :return: Boolean
         """
         return bool(self.call(
-            'catalog_product.setSpecialPrice',
-            [product, special_price, from_date, to_date, store_view]
-            )
-        )
+            'catalog_product.setSpecialPrice', [
+                product, special_price, from_date, to_date, store_view,
+                identifierType
+            ]
+        ))
 
-    def getSpecialPrice(self, product, store_view=None):
+    def getSpecialPrice(self, product, store_view=None, identifierType=None):
         """
         Get product special price data
 
         :param product: ID or SKU of product
         :param store_view: ID or Code of Store view
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
 
         :return: Dictionary
         """
         return self.call(
-            'catalog_product.getSpecialPrice', [product, store_view]
+            'catalog_product.getSpecialPrice', [
+                product, store_view, identifierType
+            ]
         )
 
-    def delete(self, product):
+    def delete(self, product, identifierType=None):
         """
         Delete a product
 
         :param product: ID or SKU of product
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: Boolean
         """
-        return bool(self.call('catalog_product.delete', [product]))
+        return bool(self.call('catalog_product.delete', [
+            product, identifierType
+        ]))
 
 
 class ProductAttribute(API):
@@ -516,28 +538,34 @@ class ProductImages(API):
         return int(self.call('catalog_product_attribute_media.currentStore',
             args))
 
-    def list(self, product, store_view=None):
+    def list(self, product, store_view=None, identifierType=None):
         """
         Retrieve product image list
 
         :param product: ID or SKU of product
         :param store_view: Code or ID of store view
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: `list` of `dict`
         """
         return self.call('catalog_product_attribute_media.list',
-                [product, store_view])
+                [product, store_view, identifierType])
 
-    def info(self, product, image_file, store_view=None):
+    def info(self, product, image_file, store_view=None, identifierType=None):
         """
         Retrieve product image data
 
         :param product: ID or SKU of product
         :param store_view: ID or Code of store view
         :param attributes: List of fields required
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: `list` of `dict`
         """
         return self.call('catalog_product_attribute_media.info',
-                [product, image_file, store_view])
+                [product, image_file, store_view, identifierType])
 
     def types(self, attribute_set_id):
         """
@@ -549,7 +577,7 @@ class ProductImages(API):
         return self.call('catalog_product_attribute_media.types',
                 [attribute_set_id])
 
-    def create(self, product, data, store_view=None):
+    def create(self, product, data, store_view=None, identifierType=None):
         """
         Upload a new product image.
 
@@ -559,12 +587,16 @@ class ProductImages(API):
                 'position': '1', 'exclude': '0',
                 'types': ['image', 'small_image', 'thumbnail']}
         :param store_view: Store view ID or Code
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: string - image file name
         """
         return self.call('catalog_product_attribute_media.create',
-                [product, data, store_view])
+                [product, data, store_view, identifierType])
 
-    def update(self, product, img_file_name, data, store_view=None):
+    def update(self, product, img_file_name, data, store_view=None,
+               identifierType=None):
         """
         Update a product image.
 
@@ -576,22 +608,28 @@ class ProductImages(API):
                 'position': '1', 'exclude': '0',
                 'types': ['image', 'small_image', 'thumbnail']}
         :param store_view: Store view ID or Code
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: string - image file name
         """
         return self.call('catalog_product_attribute_media.update',
-                [product, img_file_name, data, store_view])
+                [product, img_file_name, data, store_view, identifierType])
 
-    def remove(self, product, img_file_name):
+    def remove(self, product, img_file_name, identifierType=None):
         """
         Remove a product image.
 
         :param product: ID or SKU of product
         :param img_file_name: The image file name
             Example: '/m/y/my_image_thumb.jpg'
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: boolean
         """
         return self.call('catalog_product_attribute_media.remove',
-                [product, img_file_name])
+                [product, img_file_name, identifierType])
 
 
 class ProductTierPrice(API):
@@ -600,16 +638,20 @@ class ProductTierPrice(API):
     """
     __slots__ = ()
 
-    def info(self, product):
+    def info(self, product, identifierType=None):
         """
         Retrieve product data
 
         :param product: ID or SKU of product
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: `list` of `dict`
         """
-        return self.call('catalog_product_attribute_tier_price.info', [product])
+        return self.call('catalog_product_attribute_tier_price.info',
+                         [product, identifierType])
 
-    def update(self, product, data):
+    def update(self, product, data, identifierType=None):
         """
         Update product tier prices.
 
@@ -629,11 +671,13 @@ class ProductTierPrice(API):
                     'website': 'all',
                     ...
                 },...]
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
 
         :return: Boolean
         """
         return bool(self.call('catalog_product_attribute_tier_price.update',
-                [product, data]))
+                [product, data, identifierType]))
 
 
 class ProductLinks(API):
@@ -642,18 +686,23 @@ class ProductLinks(API):
     """
     __slots__ = ()
 
-    def list(self, link_type, product):
+    def list(self, link_type, product, identifierType=None):
         """
         Retrieve list of linked products
 
         :param link_type: type of link, one of 'cross_sell', 'up_sell',
                 'related' or 'grouped'
         :param product: ID or SKU of product
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: `list` of `dict`
         """
-        return self.call('catalog_product_link.list', [link_type, product])
+        return self.call('catalog_product_link.list',
+                         [link_type, product, identifierType])
 
-    def assign(self, link_type, product, linked_product, data=None):
+    def assign(self, link_type, product, linked_product, data=None,
+               identifierType=None):
         """
         Assign a product link
 
@@ -663,12 +712,16 @@ class ProductLinks(API):
         :param linked_product: ID or SKU of linked product
         :param data: dictionary of link data, (position, qty, etc.)
                 Example: { 'position': '0', 'qty': 1}
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: boolean
         """
         return bool(self.call('catalog_product_link.assign',
-                [link_type, product, linked_product, data]))
+                [link_type, product, linked_product, data, identifierType]))
 
-    def update(self, link_type, product, linked_product, data=None):
+    def update(self, link_type, product, linked_product, data=None,
+               identifierType=None):
         """
         Update a product link
 
@@ -678,12 +731,15 @@ class ProductLinks(API):
         :param linked_product: ID or SKU of linked product
         :param data: dictionary of link data, (position, qty, etc.)
                 Example: { 'position': '0', 'qty': 1}
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: boolean
         """
         return bool(self.call('catalog_product_link.update',
-                [link_type, product, linked_product, data]))
+                [link_type, product, linked_product, data, identifierType]))
 
-    def remove(self, link_type, product, linked_product):
+    def remove(self, link_type, product, linked_product, identifierType=None):
         """
         Remove a product link
 
@@ -691,10 +747,13 @@ class ProductLinks(API):
                 'related' or 'grouped'
         :param product: ID or SKU of product
         :param linked_product: ID or SKU of linked product to unlink
+        :param identifierType: Defines whether the product or SKU value is
+                               passed in the "product" parameter.
+
         :return: boolean
         """
         return bool(self.call('catalog_product_link.remove',
-                [link_type, product, linked_product]))
+                [link_type, product, linked_product, identifierType]))
 
     def types(self):
         """
