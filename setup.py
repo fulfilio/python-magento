@@ -16,10 +16,10 @@ execfile(os.path.join('magento', 'version.py'))
 setup(
     name = 'magento',
     version=VERSION,
-    url='https://github.com/openlabs/magento/',
+    url='https://github.com/fulfilio/magento/',
     license='GNU Affero General Public License v3',
     author='Sharoon Thomas, Openlabs Technologies',
-    author_email='info@openlabs.co.in',
+    author_email='info@fulfil.io',
     description='Magento Core API Client',
     long_description=open('README.rst').read(),
     packages=['magento'],
