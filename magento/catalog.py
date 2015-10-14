@@ -872,3 +872,17 @@ class Inventory(API):
                 [product, data]
                 )
             )
+
+    def update_multi(self, product_data_pairs):
+        """
+        It is usually expensive to update inventory on magento and this
+        uses the multi call api to make it faster. The expected argument is
+        a list of pairs of product and data dictionaries.
+        """
+        return self.multiCall([
+            [
+                'cataloginventory_stock_item.update',
+                product_data_pair
+            ]
+            for product_data_pair in product_data_pairs
+        ])
