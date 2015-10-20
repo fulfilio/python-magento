@@ -8,4 +8,4 @@
     :copyright: © 2013 by Openlabs Technologies & Consulting (P) Limited
     :license: BSD, see LICENSE for more details.
 """
-VERSION = '1.2'
+VERSION = '1.3'
