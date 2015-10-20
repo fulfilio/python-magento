@@ -66,6 +66,17 @@ class Order(API):
             'sales_order.info', [order_increment_id]
             )
 
+    def info_multi(self, order_ids):
+        """
+        This is multicall version of 'order.info'
+        """
+        return self.multiCall([
+            [
+                'sales_order.info', [order_id]
+            ]
+            for order_id in order_ids
+        ])
+
     def addcomment(self, order_increment_id,
             status, comment=None, notify=False):
         """
