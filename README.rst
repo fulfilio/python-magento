@@ -51,6 +51,6 @@ Usage
 License
 -------
 
-GNU Affero General Public License version 3
+BSD 3-Clause
 
 See LICENSE for more details
