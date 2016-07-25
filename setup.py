@@ -15,7 +15,7 @@ setup(
     name = 'magento',
     version=VERSION,
     url='https://github.com/fulfilio/magento/',
-    license='GNU Affero General Public License v3',
+    license='BSD 3-Clause',
     author='Sharoon Thomas, Openlabs Technologies',
     author_email='info@fulfil.io',
     description='Magento Core API Client',
