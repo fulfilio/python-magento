@@ -5,9 +5,7 @@
     Allows to export/import sales orders from/into Magento,
     to create invoices, shipments, credit memos
 
-    :copyright: (c) 2010 by Sharoon Thomas.
-    :copyright: (c) 2010-2013 by Openlabs Technologies & Consulting (P) LTD
-    :license: AGPLv3, see LICENSE for more details
+    :license: BSD, see LICENSE for more details
 '''
 from .api import API
 

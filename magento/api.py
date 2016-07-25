@@ -1,12 +1,10 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 '''
     magento.api
 
     Generic API for magento
 
-    :copyright: (c) 2010 by Sharoon Thomas.
-    :copyright: (c) 2010 by Openlabs Technologies & Consulting (P) LTD
-    :license: AGPLv3, see LICENSE for more details
+    :license: BSD, see LICENSE for more details
 '''
 
 PROTOCOLS = []
@@ -24,6 +22,15 @@ except ImportError:
 else:
     PROTOCOLS.append('soap')
 
+from . import rest
+try:
+    import requests
+    import json
+except ImportError:
+    pass
+else:
+    PROTOCOLS.append('rest')
+
 from magento.utils import expand_url
 
 
@@ -33,7 +40,8 @@ class API(object):
     """
 
     def __init__(self, url, username, password,
-                 version='1.3.2.4', full_url=False, protocol='xmlrpc', transport=None):
+                 version='1.3.2.4', full_url=False, protocol='xmlrpc', transport=None,
+                 verify_ssl=True):
         """
         This is the Base API class which other APIs have to subclass. By
         default the inherited classes also get the properties of this
@@ -98,6 +106,7 @@ class API(object):
         :param protocol: 'xmlrpc' and 'soap' are valid values
         :param transport: optional xmlrpclib.Transport subclass for
                     use in xmlrpc requests
+        :param verify_ssl: for REST API, skip SSL validation if False
         """
         assert protocol \
             in PROTOCOLS, "protocol must be %s" % ' OR '.join(PROTOCOLS)
@@ -109,6 +118,7 @@ class API(object):
         self.transport = transport
         self.session = None
         self.client = None
+        self.verify_ssl = verify_ssl
 
     def connect(self):
         """
@@ -121,6 +131,10 @@ class API(object):
                     self.url, allow_none=True, transport=self.transport)
             else:
                 self.client = ServerProxy(self.url, allow_none=True)
+        elif self.protocol == 'rest':
+            # Use an authentication token as the password
+            self.client = rest.Client(self.url, self.password,
+                                      verify_ssl=self.verify_ssl)
         else:
             self.client = Client(self.url)
 
@@ -134,6 +148,8 @@ class API(object):
         if self.protocol == 'xmlrpc':
             self.session = self.client.login(
                 self.username, self.password)
+        elif self.protocol == 'rest':
+            self.session = True
         else:
             self.session = self.client.service.login(
                 self.username, self.password)
@@ -147,7 +163,7 @@ class API(object):
         """
         if self.protocol == 'xmlrpc':
             self.client.endSession(self.session)
-        else:
+        elif self.protocol == 'soap':
             self.client.service.endSession(self.session)
         self.session = None
 
@@ -157,6 +173,8 @@ class API(object):
         """
         if self.protocol == 'xmlrpc':
             return self.client.call(self.session, resource_path, arguments)
+        elif self.protocol == 'rest':
+            return self.client.call(resource_path, arguments)
         else:
             return self.client.service.call(
                 self.session, resource_path, arguments)
