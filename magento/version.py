@@ -6,4 +6,4 @@
     installing the module
 
 """
-VERSION = '1.3'
+VERSION = '2.0'
