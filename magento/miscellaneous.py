@@ -4,8 +4,6 @@
 
     This API allows to access additional magento information
 
-    :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
-    :license: AGPLv3, see LICENSE for more details.
 """
 from magento.api import API
 
