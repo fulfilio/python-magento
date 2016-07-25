@@ -20,7 +20,9 @@ def expand_url(url, protocol):
     """
     if protocol == 'soap':
         ws_part = 'api/?wsdl'
-    else:
+    elif protocol == 'xmlrpc':
         ws_part = 'index.php/api/xmlrpc'
+    else:
+        ws_part = 'index.php/rest/V1'
     return url.endswith('/') and url + ws_part or url + '/' + ws_part
 
