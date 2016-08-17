@@ -119,6 +119,117 @@ class Order(API):
         return bool(self.call('sales_order.cancel', [order_increment_id]))
 
 
+class CreditMemo(API):
+    """
+    Allows create/export order credit memos.
+    """
+    __slots__ = ()
+
+    def list(self, filters=None):
+        """
+        Retrieve credit memo list by filters
+
+        :param filters: Dictionary of filters.
+
+               Format :
+                   `{<attribute>:{<operator>:<value>}}`
+               Example :
+                   `{'firstname':{'ilike':'sharoon'}}`
+
+        :return: `list` of `dict`
+        """
+        return self.call('sales_order_creditmemo.list', [filters])
+
+    def info(self, creditmemo_increment_id):
+        """
+        Retrieve credit memo info
+
+        :param creditmemo_increment_id: Credit memo increment ID
+
+        :return dict, credit memo data
+        """
+        return self.call('sales_order_creditmemo.info', [creditmemo_increment_id])
+
+    def create(
+            self,
+            order_increment_id,
+            creditmemo_data=None,
+            comment=None,
+            email=False,
+            include_comment=False,
+            refund_to_store_credit_amount=None):
+        """
+        Create new credit_memo for order
+
+        :param order_increment_id: Order Increment ID
+        :type order_increment_id: str
+        :param creditmemo_data: Sales order credit memo data (optional)
+        :type creditmemo_data: associative array as dict
+
+            {
+                'qtys': [
+                    {
+                        'order_item_id': str,   # Order item ID to be refunded
+                        'qty': int              # Items quantity to be refunded
+                    },
+                    ...
+                ],
+                'shipping_amount': float        # refund shipping amount (optional)
+                'adjustment_positive': float    # adjustment refund amount (optional)
+                'adjustment_negative': float    # adjustment fee amount (optional)
+            }
+
+        :param comment: Credit memo Comment
+        :type comment: str
+        :param email: send e-mail flag (optional)
+        :type email: bool
+        :param include_comment: include comment in e-mail flag (optional)
+        :type include_comment: bool
+        :param refund_to_store_credit_amount: amount to refund to store credit
+        :type refund_to_store_credit_amount: float
+
+        :return str, increment id of credit memo created
+        """
+        if comment is None:
+            comment = ''
+        return self.call(
+            'sales_order_creditmemo.create', [
+                order_increment_id, creditmemo_data, comment, email, include_comment, refund_to_store_credit_amount
+            ]
+        )
+
+    def addcomment(self, creditmemo_increment_id,
+            comment, email=True, include_in_email=False):
+        """
+        Add new comment to credit memo
+
+        :param creditmemo_increment_id: Credit memo increment ID
+
+        :return: bool
+        """
+        return bool(
+            self.call(
+                'sales_order_creditmemo.addComment',
+                [creditmemo_increment_id, comment, email, include_in_email]
+            )
+        )
+
+    #: A proxy for :meth:`addcomment`
+    addComment = addcomment
+
+    def cancel(self, creditmemo_increment_id):
+        """
+        Cancel credit memo
+
+        :param creditmemo_increment_id: Credit memo ID
+
+        :return: bool
+        """
+        return bool(
+            self.call('sales_order_creditmemo.cancel', [creditmemo_increment_id])
+        )
+
+
 class Shipment(API):
     """
     Allows create/export order shipments.
