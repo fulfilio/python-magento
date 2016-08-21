@@ -7,6 +7,7 @@
     :license: BSD, see LICENSE for more details
 '''
 import sys
+from threading import RLock
 
 PROTOCOLS = []
 try:
@@ -35,16 +36,37 @@ except ImportError:
 else:
     PROTOCOLS.append('rest')
 
-from magento.utils import expand_url
+from magento.utils import expand_url, camel_2_snake
+
+
+class ClientApiMeta(type):
+    """
+    A Metaclass that automatically injects objects that inherit from API
+    as properties.
+    """
+    def __new__(meta, name, bases, dct):
+        abstract = dct.get('__abstract__', False)
+        Klass = super(ClientApiMeta, meta).__new__(meta, name, bases, dct)
+
+        if not abstract:
+            setattr(
+                API, camel_2_snake(name),
+                property(lambda self: self.get_instance_of(Klass))
+            )
+
+        return Klass
 
 
 class API(object):
     """
     Generic API to connect to magento
     """
+    __metaclass__ = ClientApiMeta
+    __abstract__ = True
 
     def __init__(self, url, username, password,
-                 version='1.3.2.4', full_url=False, protocol='xmlrpc', transport=None,
+                 version='1.3.2.4', full_url=False,
+                 protocol='xmlrpc', transport=None,
                  verify_ssl=True):
         """
         This is the Base API class which other APIs have to subclass. By
@@ -123,6 +145,7 @@ class API(object):
         self.session = None
         self.client = None
         self.verify_ssl = verify_ssl
+        self.lock = RLock()
 
     def connect(self):
         """
@@ -192,3 +215,26 @@ class API(object):
         else:
             return self.client.service.multiCall(self.session, calls)
 
+    _missing = []
+
+    def get_instance_of(self, Klass):
+        """
+        Return an instance of the client API with the same auth credentials
+        that the API server was instanciated with. The created instance is
+        cached, so subsequent requests get an already existing instance.
+
+        :param Klass: The klass for which the instance has to be created.
+        """
+        with self.lock:
+            value = self.__dict__.get(Klass.__name__, self._missing)
+            if value is self._missing:
+                value = Klass(
+                    self.url,
+                    self.username,
+                    self.password,
+                    self.version,
+                    True,
+                    self.protocol,
+                )
+                self.__dict__[Klass.__name__] = value.__enter__()
+            return value
