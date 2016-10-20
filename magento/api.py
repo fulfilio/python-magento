@@ -11,10 +11,10 @@ from threading import RLock
 
 PROTOCOLS = []
 try:
-    if sys.version_info <= (2,):
+    if sys.version_info < (3, 0):
         from xmlrpclib import ServerProxy
     else:
-        from xmlrpc.client import ServerProxy
+        from xmlrpc.client import ServerProxy        
 except ImportError:
     pass
 else:
