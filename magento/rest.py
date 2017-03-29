@@ -13,10 +13,18 @@ class Client(object):
         self._token = token
         self._verify_ssl = verify_ssl
 
-    def call(self, resource_path, arguments):
+    def call(self, resource_path, arguments, http_method=None):
         url = '%s/%s' % (self._url, resource_path)
-        res = requests.get(
-            url, params=arguments, verify=self._verify_ssl,
-            headers={'Authorization': 'Bearer %s' % self._token})
+        if http_method is None:
+            http_method = 'get'
+        function = getattr(requests, http_method)
+        headers = {'Authorization': 'Bearer %s' % self._token}
+        kwargs = {'headers': headers}
+        if http_method == 'get':
+            kwargs['params'] = arguments
+        elif arguments is not None:
+            kwargs['data'] = json.dumps(arguments)
+            headers['Content-Type'] = 'application/json'
+        res = function(url, **kwargs)
         res.raise_for_status()
         return res.json()

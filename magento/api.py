@@ -194,14 +194,15 @@ class API(object):
             self.client.service.endSession(self.session)
         self.session = None
 
-    def call(self, resource_path, arguments):
+    def call(self, resource_path, arguments, http_method=None):
         """
         Proxy for SOAP call API
         """
         if self.protocol == 'xmlrpc':
             return self.client.call(self.session, resource_path, arguments)
         elif self.protocol == 'rest':
-            return self.client.call(resource_path, arguments)
+            return self.client.call(
+                resource_path, arguments, http_method=http_method)
         else:
             return self.client.service.call(
                 self.session, resource_path, arguments)
