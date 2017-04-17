@@ -1,6 +1,7 @@
 # coding: utf-8
 try:
     import requests
+    from requests import HTTPError
     import json
 except ImportError:
     pass
@@ -26,5 +27,8 @@ class Client(object):
             kwargs['data'] = json.dumps(arguments)
             headers['Content-Type'] = 'application/json'
         res = function(url, **kwargs)
+        if (res.status_code == 400 and res._content):
+            raise HTTPError(
+                url, res.status_code, res._content, headers, __name__)
         res.raise_for_status()
         return res.json()
