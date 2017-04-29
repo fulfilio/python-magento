@@ -14,8 +14,11 @@ class Client(object):
         self._token = token
         self._verify_ssl = verify_ssl
 
-    def call(self, resource_path, arguments, http_method=None):
+    def call(self, resource_path, arguments, http_method=None, storeview=None):
         url = '%s/%s' % (self._url, resource_path)
+        if storeview:
+            # https://github.com/magento/magento2/issues/3864
+            url = url.replace('/rest/V1/', '/rest/%s/V1/' % storeview)
         if http_method is None:
             http_method = 'get'
         function = getattr(requests, http_method)
