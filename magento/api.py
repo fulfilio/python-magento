@@ -203,7 +203,7 @@ class API(object):
         elif self.protocol == 'rest':
             return self.client.call(
                 resource_path, arguments, http_method=http_method,
-                storeview=None)
+                storeview=storeview)
         else:
             return self.client.service.call(
                 self.session, resource_path, arguments)
