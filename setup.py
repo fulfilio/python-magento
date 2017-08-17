@@ -9,7 +9,7 @@
 import os
 from setuptools import setup
 
-execfile(os.path.join('magento', 'version.py'))
+exec(open(os.path.join('magento', 'version.py')).read())
 
 setup(
     name = 'magento',
@@ -24,7 +24,7 @@ setup(
     zip_safe=False,
     platforms='any',
     install_requires=[
-        'suds>=0.3.9',
+        'suds-jurko>=0.6',
     ],
     classifiers=[
         'Development Status :: 6 - Mature',
@@ -32,7 +32,8 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],

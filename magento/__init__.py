@@ -15,11 +15,9 @@ __all__ = [
             'ProductAttributeSet', 'ProductTypes', 'ProductImages',
             'ProductTierPrice', 'ProductLinks', 'ProductConfigurable',
             'Inventory', 'Order', 'Shipment', 'Invoice', '__version__',
-            'Client',
             ]
 
 from .api import API
-from .client import Client
 from .checkout import Cart, CartCoupon, CartCustomer
 from .checkout import CartPayment, CartProduct, CartShipping
 from .miscellaneous import Store, Magento
