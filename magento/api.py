@@ -57,11 +57,17 @@ class ClientApiMeta(type):
         return Klass
 
 
-class API(object):
+class API(object, metaclass = ClientApiMeta):
     """
     Generic API to connect to magento
     """
+    
+    """
+    The following line can be removed or left, Python3 ignores metaclass assignement other than class parameter
+    """
+    ########
     __metaclass__ = ClientApiMeta
+    ########
     __abstract__ = True
 
     def __init__(self, url, username, password,
