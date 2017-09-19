@@ -63,7 +63,7 @@ class API(object, metaclass = ClientApiMeta):
     """
     
     """
-    The following line can be removed or left, Python3 ignores metaclass assignement other than class parameter
+    The following line can be removed or left, Python3 ignores metaclass assignment other than class parameter
     """
     ########
     __metaclass__ = ClientApiMeta
