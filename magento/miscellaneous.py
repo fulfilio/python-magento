@@ -5,8 +5,8 @@
     This API allows to access additional magento information
 
 """
-from magento.api import API
-
+# from magento.api import API
+from .api import API
 
 class Store(API):
     """

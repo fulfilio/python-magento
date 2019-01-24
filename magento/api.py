@@ -57,7 +57,7 @@ class ClientApiMeta(type):
         return Klass
 
 
-class API(object):
+class API(object,metaclass = ClientApiMeta):
     """
     Generic API to connect to magento
     """
