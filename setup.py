@@ -25,6 +25,7 @@ setup(
     platforms='any',
     install_requires=[
         'suds-jurko>=0.6',
+        'six',
     ],
     classifiers=[
         'Development Status :: 6 - Mature',
