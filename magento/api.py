@@ -6,12 +6,12 @@
 
     :license: BSD, see LICENSE for more details
 '''
-import sys
+import six
 from threading import RLock
 
 PROTOCOLS = []
 try:
-    if sys.version_info < (3, 0):
+    if six.PY2:
         from xmlrpclib import ServerProxy
     else:
         from xmlrpc.client import ServerProxy
@@ -57,11 +57,11 @@ class ClientApiMeta(type):
         return Klass
 
 
+@six.add_metaclass(ClientApiMeta)
 class API(object):
     """
     Generic API to connect to magento
     """
-    __metaclass__ = ClientApiMeta
     __abstract__ = True
 
     def __init__(self, url, username, password,
