@@ -30,7 +30,6 @@ else:
 from . import rest
 try:
     import requests
-    import json
 except ImportError:
     pass
 else:

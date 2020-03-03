@@ -2,7 +2,6 @@
 try:
     import requests
     from requests import HTTPError
-    import json
 except ImportError:
     pass
 
@@ -27,8 +26,7 @@ class Client(object):
         if http_method == 'get':
             kwargs['params'] = arguments
         elif arguments is not None:
-            kwargs['data'] = json.dumps(arguments)
-            headers['Content-Type'] = 'application/json'
+            kwargs['json'] = arguments
         res = function(url, **kwargs)
         if (res.status_code == 400 and res._content):
             raise HTTPError(
